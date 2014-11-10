@@ -1,0 +1,17 @@
+---
+- name: disable iptables
+  service: name=iptables state=stopped enabled=no
+
+- name: configure /etc/fstab
+  mount: name={{ item.exportdir }}
+         src={{ item.server }}:{{ item.exportdir }}
+         fstype=nfs
+         state=mounted
+  with_items:
+    - { "server" : "192.168.56.101", "exportdir": "/home",     "mountpoint" : "/home" }
+    - { "server" : "192.168.56.101", "exportdir": "/var/tmp",  "mountpoint" : "/mnt/tmp" }
+  tags: nfs-client
+
+
+
+  

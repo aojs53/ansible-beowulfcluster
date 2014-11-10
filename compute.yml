@@ -1,0 +1,6 @@
+---
+- hosts: nfs-client
+  sudo: yes
+  roles:
+    - nfs/client
+

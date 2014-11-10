@@ -1,0 +1,29 @@
+---
+- name: be sure iptables is off
+  service: name=iptables state=stopped enabled=no
+  tags: nfs-server
+
+- name: be sure mount point is correctly mounted
+  file: dest=/home state=directory owner=root group=root mode=0755
+  tags: nfs-server
+
+- name: configure /etc/exports
+  lineinfile: dest=/etc/exports regexp=^{{ item }} line='{{ item }}  192.168.56.0/24(rw,no_root_squash)'
+  with_items:
+    - /home
+    - /var/tmp
+  tags: nfs-server
+  notify: restart nfsd
+
+- name: be sure installed nfs-utils
+  yum: pkg=nfs-utils state=installed
+  tags: nfs-server
+
+- name: be sure nfsd and nfslock is running and enabled
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - nfs
+    - nfslock
+  tags: nfs-server
+
+  

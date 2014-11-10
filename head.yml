@@ -1,0 +1,8 @@
+---
+- hosts: nfs-server
+  sudo: yes
+  roles:
+    - nfs/server
+
+
+
